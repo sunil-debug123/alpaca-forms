@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpaca vs JavaScript Forms</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        table {
+            background: #fff;
+        }
+        th {
+            background: #007bff;
+            color: white;
+            text-align: center;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+    </style>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alpaca@1.5.27/dist/alpaca/bootstrap/alpaca.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Alpaca.js Form</h2>
+        <div id="alpacaForm"></div>
+        
+        <h2 class="text-center">JavaScript Form</h2>
+        <form id="jsForm">
+            <div class="form-group">
+                <label for="jsName">Full Name</label>
+                <input type="text" id="jsName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="jsEmail">Email</label>
+                <input type="email" id="jsEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="jsPhone">Phone Number</label>
+                <input type="tel" id="jsPhone" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="jsDepartment">Department</label>
+                <select id="jsDepartment" class="form-control" required>
+                    <option value="">Select Department</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="HR">HR</option>
+                    <option value="Finance">Finance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="jsExperience">Years of Experience</label>
+                <input type="number" id="jsExperience" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="jsAddress">Address</label>
+                <input type="text" id="jsAddress" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="jsSkills">Skills (comma separated)</label>
+                <input type="text" id="jsSkills" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <h2 class="text-center">Comparison Table</h2>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Alpaca.js</th>
+                    <th>Traditional JavaScript</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ease of Use</td>
+                    <td>Schema-based, minimal coding</td>
+                    <td>Requires manual DOM manipulation</td>
+                </tr>
+                <tr>
+                    <td>Validation</td>
+                    <td>Built-in schema validation</td>
+                    <td>Manual validation logic required</td>
+                </tr>
+                <tr>
+                    <td>Complex Forms</td>
+                    <td>Easier to create dynamic and dependent fields</td>
+                    <td>Requires event listeners and manual condition handling</td>
+                </tr>
+                <tr>
+                    <td>Customization</td>
+                    <td>Easily configurable options</td>
+                    <td>Requires additional JS & CSS</td>
+                </tr>
+                <tr>
+                    <td>Code Complexity</td>
+                    <td>Less, due to declarative JSON</td>
+                    <td>More, due to imperative coding</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#alpacaForm").alpaca({
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string", "title": "Full Name", "required": true },
+                        "email": { "type": "string", "title": "Email", "format": "email", "required": true },
+                        "phone": { "type": "string", "title": "Phone Number", "required": true },
+                        "department": {
+                            "type": "string",
+                            "title": "Department",
+                            "enum": ["Engineering", "Marketing", "HR", "Finance"],
+                            "required": true
+                        },
+                        "experience": { "type": "number", "title": "Years of Experience", "required": true },
+                        "address": { "type": "string", "title": "Address", "required": true },
+                        "skills": {
+                            "type": "array",
+                            "title": "Skills",
+                            "items": { "type": "string" }
+                        }
+                    }
+                },
+                "options": {
+                    "fields": {
+                        "name": { "placeholder": "Enter your full name" },
+                        "email": { "placeholder": "Enter your email address" },
+                        "phone": { "placeholder": "Enter your phone number" },
+                        "address": { "placeholder": "Enter your address" },
+                        "skills": { "type": "array", "items": { "type": "text" } }
+                    },
+                    "form": {
+                        "buttons": {
+                            "submit": {
+                                "title": "Submit",
+                                "click": function() {
+                                    var value = this.getValue();
+                                    alert("Form Submitted!\n" + JSON.stringify(value, null, 4));
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+    document.getElementById("jsForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let isValid = true;
+        let name = document.getElementById("jsName").value;
+        let email = document.getElementById("jsEmail").value;
+        let phone = document.getElementById("jsPhone").value;
+        let skills = document.getElementById("jsSkills").value;
+        let department = document.getElementById("jsDepartment").value;
+        
+        document.querySelectorAll(".error").forEach(e => e.textContent = "");
+        
+        if (name.trim() === "") {
+            document.getElementById("nameError").textContent = "Name is required";
+            isValid = false;
+        }
+        if (!email.includes("@")) {
+            document.getElementById("emailError").textContent = "Invalid email format";
+            isValid = false;
+        }
+        if (!/^\d{10}$/.test(phone)) {
+            document.getElementById("phoneError").textContent = "Invalid phone number (10 digits required)";
+            isValid = false;
+        }
+        if (department === "Engineering" && skills.trim() === "") {
+            document.getElementById("skillsError").textContent = "Skills required for Engineering";
+            isValid = false;
+        }
+        
+        if (isValid) {
+            alert("JavaScript Form Submitted Successfully!");
+        }
+    });
+    </script>
+</body>
+</html>
